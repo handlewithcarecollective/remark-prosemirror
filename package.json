@@ -1,0 +1,10 @@
+{
+  "name": "@handlewithcare/remark-prosemirror",
+  "version": "0.1.0",
+  "description": "A remark plugin for converting between markdown and ProseMirror",
+  "main": "index.js",
+  "repository": "git@github.com:handlewithcarecollective/remark-prosemirror.git",
+  "author": "Shane Friedman <shane@handlewithcare.dev>",
+  "license": "MIT",
+  "packageManager": "yarn@4.5.3"
+}
