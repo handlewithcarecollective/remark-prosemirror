@@ -2,9 +2,31 @@
   "name": "@handlewithcare/remark-prosemirror",
   "version": "0.1.0",
   "description": "A remark plugin for converting between markdown and ProseMirror",
+  "type": "module",
   "main": "index.js",
   "repository": "git@github.com:handlewithcarecollective/remark-prosemirror.git",
   "author": "Shane Friedman <shane@handlewithcare.dev>",
   "license": "MIT",
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "yarn@4.5.3",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "prosemirror-model": "^1.24.1",
+    "rehype": "^1.0.0",
+    "swc": "^1.0.11",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "unified": "^11.0.5"
+  },
+  "dependencies": {
+    "hast-util-from-html": "^2.0.3",
+    "micromark-util-sanitize-uri": "^2.0.1",
+    "trim-lines": "^3.0.1",
+    "unist-util-visit": "^5.0.0",
+    "zwitch": "^2.0.4"
+  }
 }

@@ -1,0 +1,8 @@
+{
+  "extends": "@tsconfig/strictest",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  },
+  "files": ["index.ts", "remarkProseMirror.ts", "proseMirrorRemark.ts"]
+}
