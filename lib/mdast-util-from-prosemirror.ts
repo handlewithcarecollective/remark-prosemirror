@@ -7,6 +7,11 @@ import {
 import { Node as PmNode, Mark as PmMark, Schema } from "prosemirror-model";
 import { is } from "unist-util-is";
 
+interface PmMarkedNode {
+  node: PmNode;
+  marks: readonly PmMark[];
+}
+
 interface State<PmNodes extends string, PmMarks extends string> {
   one(pmNode: PmNode, parent?: PmNode): MdastNodes | MdastNodes[] | null;
   all(pmNode: PmNode): MdastNodes[];
@@ -55,12 +60,60 @@ function createState<PmNodes extends string, PmMarks extends string>(
     return null;
   }
 
-  function all(pmNode: PmNode): MdastNodes[] {
-    // TODO: Handle marks!
-    return pmNode.children
-      .map((child) => state.one(child, pmNode))
+  function processChildPartition(nodes: PmMarkedNode[], parent: PmNode) {
+    const firstChild = nodes[0];
+    const firstMark = firstChild?.marks[0];
+    if (!firstMark) return nodes.map((node) => state.one(node.node, parent));
+    const children = hydrateMarks(
+      nodes.map(({ node, marks }) => ({ node, marks: marks.slice(1) })),
+      parent
+    );
+    const handler = state.markHandlers[firstMark.type.name as PmMarks];
+    if (!handler) return children;
+    return handler(firstMark, parent, children, state);
+  }
+
+  function hydrateMarks(
+    children: PmMarkedNode[],
+    parent: PmNode
+  ): MdastNodes[] {
+    const partitioned = children.reduce<PmMarkedNode[][]>((acc, child) => {
+      const lastPartition = acc[acc.length - 1];
+      if (!lastPartition) {
+        return [[child]];
+      }
+      const lastChild = lastPartition[lastPartition.length - 1];
+      if (!lastChild) {
+        return [...acc.slice(0, acc.length), [child]];
+      }
+
+      if (
+        (!child.marks.length && !lastChild.marks.length) ||
+        (child.marks.length &&
+          lastChild.marks.length &&
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          child.marks[0]?.eq(lastChild.marks[0]!))
+      ) {
+        return [
+          ...acc.slice(0, acc.length - 1),
+          [...lastPartition.slice(0, lastPartition.length), child],
+        ];
+      }
+
+      return [...acc, [child]];
+    }, []);
+
+    return partitioned
+      .flatMap((nodes) => processChildPartition(nodes, parent))
       .filter((node): node is MdastNodes | MdastNodes[] => !!node)
       .flat();
+  }
+
+  function all(pmNode: PmNode): MdastNodes[] {
+    return hydrateMarks(
+      pmNode.children.map((child) => ({ node: child, marks: child.marks })),
+      pmNode
+    );
   }
 
   return state;
