@@ -31,7 +31,7 @@ interface State {
   footnoteOrder: string[];
   one: (
     node: MdastNodes,
-    parent: MdastParent | undefined
+    parent: MdastParent | undefined,
   ) => PmNode | PmNode[] | null;
 }
 
@@ -39,7 +39,7 @@ export function createState(
   schema: Schema,
   handlers: MdastHandlers,
   htmlHandlers: HastHandlers,
-  tree: MdastRoot
+  tree: MdastRoot,
 ) {
   const definitionById = new Map<string, MdastDefinition>();
   const footnoteById = new Map<string, MdastFootnoteDefinition>();
@@ -75,7 +75,7 @@ export function createState(
    */
   function one(
     node: MdastNodes,
-    parent: MdastParent | undefined
+    parent: MdastParent | undefined,
   ): PmNode | PmNode[] | null {
     return handle(schema, handlers, htmlHandlers, node, parent, state);
   }
@@ -115,8 +115,8 @@ export function createState(
                   Fragment.from(result.content).replaceChild(
                     0,
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    schema.text(trimMarkdownSpaceStart(head.text!))
-                  )
+                    schema.text(trimMarkdownSpaceStart(head.text!)),
+                  ),
                 );
               }
             }
@@ -142,7 +142,7 @@ function replaceNewlines(text: string) {
 function revert(
   schema: Schema,
   node: MdastLinkReference | MdastImageReference,
-  state: State
+  state: State,
 ) {
   const subtype = node.referenceType;
   let suffix = "]";
@@ -165,7 +165,7 @@ function revert(
 
   if (head && head.type === schema.nodes["text"]) {
     contents[0] = head.copy(
-      Fragment.from(schema.text("[" + (head.text ?? "")))
+      Fragment.from(schema.text("[" + (head.text ?? ""))),
     );
   } else {
     contents.unshift(schema.text("["));
@@ -175,7 +175,7 @@ function revert(
 
   if (tail && tail.type === schema.nodes["text"]) {
     contents[contents.length - 1] = tail.copy(
-      Fragment.from(schema.text((tail.text ?? "") + suffix))
+      Fragment.from(schema.text((tail.text ?? "") + suffix)),
     );
   } else {
     contents.push(schema.text(suffix));
@@ -226,14 +226,14 @@ function invalid(node: unknown) {
 export type HastNodeHandler = (
   node: HastNodes,
   parent: HastParent | undefined,
-  state: State
+  state: State,
 ) => PmNode | PmNode[] | null;
 
 function hastElementHandle(
   handlers: Record<string, HastNodeHandler>,
   node: HastNodes,
   parent: HastParent | undefined,
-  state: State
+  state: State,
 ): PmNode | PmNode[] | null {
   const zwitcher = zwitch("tagName", {
     handlers,
@@ -248,7 +248,7 @@ function handle(
   htmlHandlers: HastHandlers,
   node: MdastNodes,
   parent: MdastParent | undefined,
-  state: State
+  state: State,
 ): PmNode | PmNode[] | null {
   const zwitcher = zwitch("type", {
     invalid,
@@ -275,7 +275,7 @@ function handle(
           htmlHandlers,
           hastElement,
           undefined,
-          state
+          state,
         );
         if (result) return result;
         if (!node.value) return null;
@@ -283,7 +283,7 @@ function handle(
       },
       text(node: MdastText) {
         const result = schema.text(
-          replaceNewlines(trimLines(String(node.value)))
+          replaceNewlines(trimLines(String(node.value))),
         );
         return result;
       },
@@ -291,7 +291,7 @@ function handle(
       linkReference(
         node: MdastLinkReference,
         parent: MdastParent,
-        state: State
+        state: State,
       ) {
         if (handlers.linkReference)
           return handlers.linkReference(node, parent, state);
@@ -315,7 +315,7 @@ function handle(
   }) as (
     node: MdastNodes,
     parent: MdastParent | undefined,
-    state: State
+    state: State,
   ) => PmNode | PmNode[] | null;
 
   return zwitcher(node, parent, state);
@@ -323,7 +323,7 @@ function handle(
 
 export function toPmNode<MdastNode extends MdastNodes>(
   nodeType: NodeType,
-  getAttrs?: (mdastNode: MdastNode) => Record<string, unknown> | null
+  getAttrs?: (mdastNode: MdastNode) => Record<string, unknown> | null,
 ) {
   return (node: MdastNode, _: MdastParent, state: State) => {
     const children = state.all(node);
@@ -334,7 +334,7 @@ export function toPmNode<MdastNode extends MdastNodes>(
 
 export function toPmMark<MdastNode extends MdastNodes>(
   markType: MarkType,
-  getAttrs?: (mdastNode: MdastNode) => Record<string, unknown> | null
+  getAttrs?: (mdastNode: MdastNode) => Record<string, unknown> | null,
 ) {
   return (node: MdastNode, _: MdastParent, state: State) => {
     const children = state.all(node);
@@ -352,7 +352,7 @@ declare module "unified" {
 export type MdastNodeHandler<Type extends string> = (
   node: Extract<MdastNodes, { type: Type }>,
   parent: MdastParent,
-  state: State
+  state: State,
 ) => PmNode | PmNode[] | null;
 
 type MdastHandlers = {
@@ -379,8 +379,8 @@ export const toProseMirror = function (tree: MdastRoot, options: Options) {
       options.schema,
       options.handlers,
       options.htmlHandlers ?? {},
-      tree
-    )
+      tree,
+    ),
   ) as PmNode;
   doc.check();
   return doc;

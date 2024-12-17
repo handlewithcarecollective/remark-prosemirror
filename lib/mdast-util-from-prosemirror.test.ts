@@ -29,7 +29,7 @@ await describe("mdast-util-from-prosemirror", async () => {
           paragraph: fromPmNode("paragraph"),
         },
         markHandlers: {},
-      }
+      },
     );
     const result = unified().use(remarkStringify).stringify(mdast);
 
@@ -38,7 +38,7 @@ await describe("mdast-util-from-prosemirror", async () => {
       `This is a document.
 
 It has two paragraphs.
-`
+`,
     );
   });
 
@@ -52,7 +52,7 @@ It has two paragraphs.
           blockquote: fromPmNode("blockquote"),
         },
         markHandlers: {},
-      }
+      },
     );
     const result = unified().use(remarkStringify).stringify(mdast);
 
@@ -61,7 +61,7 @@ It has two paragraphs.
       `This is a document.
 
 > It has two paragraphs.
-`
+`,
     );
   });
 
@@ -77,7 +77,7 @@ It has two paragraphs.
         markHandlers: {
           em: fromPmMark("emphasis"),
         },
-      }
+      },
     );
     const result = unified().use(remarkStringify).stringify(mdast);
 
@@ -86,7 +86,7 @@ It has two paragraphs.
       `This is a *document.*
 
 It has two paragraphs.
-`
+`,
     );
   });
 
@@ -94,7 +94,7 @@ It has two paragraphs.
     const mdast = fromProseMirror(
       doc(
         p("This ", em("is a ", strong("document."))),
-        p("It has two paragraphs.")
+        p("It has two paragraphs."),
       ),
       {
         schema,
@@ -106,7 +106,7 @@ It has two paragraphs.
           em: fromPmMark("emphasis"),
           strong: fromPmMark("strong"),
         },
-      }
+      },
     );
     const result = unified().use(remarkStringify).stringify(mdast);
 
@@ -115,7 +115,7 @@ It has two paragraphs.
       `This *is a **document.***
 
 It has two paragraphs.
-`
+`,
     );
   });
 });

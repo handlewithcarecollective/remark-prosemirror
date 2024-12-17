@@ -20,6 +20,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["*.d.ts", "index.js", "lib/*.js"],
-  }
+    ignores: ["*.d.ts", "index.js", "lib/*.js", ".yarn"],
+  },
 );

@@ -4,7 +4,8 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "emitDeclarationOnly": true,
-    "declaration": true
+    "declaration": true,
+    "incremental": true
   },
   "include": ["index.ts", "lib/*.ts", "eslint.config.js"]
 }

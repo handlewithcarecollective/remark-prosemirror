@@ -19,6 +19,13 @@
     "lib/remark-prosemirror.d.ts"
   ],
   "scripts": {
+    "check:format": "yarn prettier --check .",
+    "check:lint": "yarn eslint .",
+    "check:types": "yarn tsc --noEmit",
+    "check": "yarn check:types && yarn check:lint && yarn check:format",
+    "fix:format": "yarn prettier --write .",
+    "fix:lint": "yarn eslint --fix .",
+    "fix": "yarn fix:lint && yarn fix:format",
     "build": "yarn tsc && yarn swc index.ts lib/*.ts -d .",
     "test": "yarn tsx --test lib/*.test.ts"
   },

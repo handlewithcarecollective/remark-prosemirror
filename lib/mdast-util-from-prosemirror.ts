@@ -21,7 +21,7 @@ interface State<PmNodes extends string, PmMarks extends string> {
 
 function createState<PmNodes extends string, PmMarks extends string>(
   nodeHandlers: PmNodeHandlers<PmNodes>,
-  markHandlers: PmMarkHandlers<PmMarks>
+  markHandlers: PmMarkHandlers<PmMarks>,
 ): State<PmNodes, PmMarks> {
   const state: State<PmNodes, PmMarks> = {
     one,
@@ -32,7 +32,7 @@ function createState<PmNodes extends string, PmMarks extends string>(
 
   function one(
     pmNode: PmNode,
-    parent?: PmNode
+    parent?: PmNode,
   ): MdastNodes | MdastNodes[] | null {
     const schema = pmNode.type.schema;
 
@@ -47,7 +47,7 @@ function createState<PmNodes extends string, PmMarks extends string>(
       const children = state.all(pmNode);
       assert(
         children.some((child) => is(child, "root")),
-        "Expected non-root nodes"
+        "Expected non-root nodes",
       );
       return { type: "root", children: children as MdastRootContent[] };
     }
@@ -66,7 +66,7 @@ function createState<PmNodes extends string, PmMarks extends string>(
     if (!firstMark) return nodes.map((node) => state.one(node.node, parent));
     const children = hydrateMarks(
       nodes.map(({ node, marks }) => ({ node, marks: marks.slice(1) })),
-      parent
+      parent,
     );
     const handler = state.markHandlers[firstMark.type.name as PmMarks];
     if (!handler) return children;
@@ -75,7 +75,7 @@ function createState<PmNodes extends string, PmMarks extends string>(
 
   function hydrateMarks(
     children: PmMarkedNode[],
-    parent: PmNode
+    parent: PmNode,
   ): MdastNodes[] {
     const partitioned = children.reduce<PmMarkedNode[][]>((acc, child) => {
       const lastPartition = acc[acc.length - 1];
@@ -112,7 +112,7 @@ function createState<PmNodes extends string, PmMarks extends string>(
   function all(pmNode: PmNode): MdastNodes[] {
     return hydrateMarks(
       pmNode.children.map((child) => ({ node: child, marks: child.marks })),
-      pmNode
+      pmNode,
     );
   }
 
@@ -125,7 +125,7 @@ export function fromProseMirror<PmNodes extends string, PmMarks extends string>(
     schema: Schema<PmNodes, PmMarks>;
     nodeHandlers: PmNodeHandlers<PmNodes>;
     markHandlers: PmMarkHandlers<PmMarks>;
-  }
+  },
 ): MdastRoot {
   const state = createState(options.nodeHandlers, options.markHandlers);
   return state.one(pmNode) as MdastRoot;
@@ -134,7 +134,7 @@ export function fromProseMirror<PmNodes extends string, PmMarks extends string>(
 export type PmNodeHandler = (
   node: PmNode,
   parent: PmNode | undefined,
-  state: State<string, string>
+  state: State<string, string>,
 ) => MdastNodes | MdastNodes[] | null;
 
 export type PmNodeHandlers<PmNodes extends string> = Partial<
@@ -145,7 +145,7 @@ export type PmMarkHandler = (
   mark: PmMark,
   parent: PmNode,
   children: MdastNodes[],
-  state: State<string, string>
+  state: State<string, string>,
 ) => MdastNodes | MdastNodes[] | null;
 
 export type PmMarkHandlers<PmMarks extends string> = Partial<
@@ -155,13 +155,13 @@ export type PmMarkHandlers<PmMarks extends string> = Partial<
 export function fromPmNode<Type extends MdastNodes["type"]>(
   type: Type,
   getAttrs?: (
-    pmNode: PmNode
-  ) => Omit<Extract<MdastNodes, { type: Type }>, "type" | "children">
+    pmNode: PmNode,
+  ) => Omit<Extract<MdastNodes, { type: Type }>, "type" | "children">,
 ): PmNodeHandler {
   return (
     node: PmNode,
     _: PmNode | undefined,
-    state: State<string, string>
+    state: State<string, string>,
   ) => {
     const children = state.all(node);
     const result = {
@@ -176,8 +176,8 @@ export function fromPmNode<Type extends MdastNodes["type"]>(
 export function fromPmMark<Type extends MdastNodes["type"]>(
   type: Type,
   getAttrs?: (
-    pmNode: PmMark
-  ) => Omit<Extract<MdastNodes, { type: Type }>, "type" | "children">
+    pmNode: PmMark,
+  ) => Omit<Extract<MdastNodes, { type: Type }>, "type" | "children">,
 ): PmMarkHandler {
   return (mark: PmMark, _: PmNode, mdastChildren: MdastNodes[]) => {
     const result = {

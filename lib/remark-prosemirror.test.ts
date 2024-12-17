@@ -49,7 +49,7 @@ This is a document.
     assert.equal(doc.lastChild?.firstChild?.type.name, "paragraph");
     assert.equal(
       doc.lastChild?.firstChild?.textContent,
-      "It has two paragraphs."
+      "It has two paragraphs.",
     );
   });
 
@@ -75,10 +75,10 @@ It has two *paragraphs.*
     assert.equal(doc.lastChild?.textContent, "It has two paragraphs.");
 
     assert.ok(
-      schema.marks["em"]?.isInSet(doc.firstChild?.lastChild?.marks ?? [])
+      schema.marks["em"]?.isInSet(doc.firstChild?.lastChild?.marks ?? []),
     );
     assert.ok(
-      schema.marks["em"]?.isInSet(doc.lastChild?.lastChild?.marks ?? [])
+      schema.marks["em"]?.isInSet(doc.lastChild?.lastChild?.marks ?? []),
     );
   });
 
@@ -105,17 +105,17 @@ It has two **_paragraphs._**
     assert.equal(doc.lastChild?.textContent, "It has two paragraphs.");
 
     assert.ok(
-      schema.marks["em"]?.isInSet(doc.firstChild?.lastChild?.marks ?? [])
+      schema.marks["em"]?.isInSet(doc.firstChild?.lastChild?.marks ?? []),
     );
     assert.ok(
-      schema.marks["em"]?.isInSet(doc.lastChild?.lastChild?.marks ?? [])
+      schema.marks["em"]?.isInSet(doc.lastChild?.lastChild?.marks ?? []),
     );
 
     assert.ok(
-      schema.marks["strong"]?.isInSet(doc.firstChild?.lastChild?.marks ?? [])
+      schema.marks["strong"]?.isInSet(doc.firstChild?.lastChild?.marks ?? []),
     );
     assert.ok(
-      schema.marks["strong"]?.isInSet(doc.lastChild?.lastChild?.marks ?? [])
+      schema.marks["strong"]?.isInSet(doc.lastChild?.lastChild?.marks ?? []),
     );
   });
 });

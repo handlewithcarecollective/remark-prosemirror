@@ -11,3 +11,4 @@ node_modules
 *.d.ts
 index.js
 lib/*.js
+*.tsbuildinfo
