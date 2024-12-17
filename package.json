@@ -11,9 +11,15 @@
   "files": [
     "index.js",
     "lib/mdast-util-from-prosemirror.js",
-    "lib/remark-prosemirror.js"
+    "lib/mdast-util-to-prosemirror.js",
+    "lib/remark-prosemirror.js",
+    "index.d.ts",
+    "lib/mdast-util-from-prosemirror.d.ts",
+    "lib/mdast-util-to-prosemirror.d.ts",
+    "lib/remark-prosemirror.d.ts"
   ],
   "scripts": {
+    "build": "yarn tsc && yarn swc index.ts lib/*.ts -d .",
     "test": "yarn tsx --test lib/*.test.ts"
   },
   "devDependencies": {
@@ -36,6 +42,8 @@
     "unified": "^11.0.5"
   },
   "dependencies": {
+    "@swc/cli": "^0.5.2",
+    "@swc/core": "^1.10.1",
     "devlop": "^1.1.0",
     "hast-util-from-html": "^2.0.3",
     "micromark-util-sanitize-uri": "^2.0.1",
