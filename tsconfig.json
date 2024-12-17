@@ -7,5 +7,5 @@
     "declaration": true,
     "incremental": true
   },
-  "include": ["index.ts", "lib/*.ts", "eslint.config.js"]
+  "include": ["index.ts", "lib/*.ts", "*.config.js"]
 }

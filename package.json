@@ -27,7 +27,10 @@
     "fix:lint": "yarn eslint --fix .",
     "fix": "yarn fix:lint && yarn fix:format",
     "build": "yarn tsc && yarn swc index.ts lib/*.ts -d .",
-    "test": "yarn tsx --test lib/*.test.ts"
+    "test": "yarn tsx --test lib/*.test.ts",
+    "postinstall": "husky",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -36,6 +39,9 @@
     "@types/mdast": "^4",
     "@types/unist": "^3.0.3",
     "eslint": "^9.17.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "pinst": "^3.0.0",
     "prettier": "^3.4.2",
     "prosemirror-model": "^1.24.1",
     "prosemirror-test-builder": "^1.1.1",
