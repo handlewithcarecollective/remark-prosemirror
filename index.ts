@@ -1,6 +1,10 @@
-export { remarkProseMirror, toPmNode, toPmMark } from "./remarkProseMirror.js";
-// export {
-//   proseMirrorRemark,
-//   fromPmNode,
-//   fromPmMark,
-// } from "./proseMirrorRemark.js";
+export {
+  remarkProseMirror,
+  toPmNode,
+  toPmMark,
+} from "./lib/remark-prosemirror.js";
+export {
+  fromProseMirror,
+  fromPmNode,
+  fromPmMark,
+} from "./lib/mdast-util-from-prosemirror.js";

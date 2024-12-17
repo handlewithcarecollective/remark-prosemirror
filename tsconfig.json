@@ -2,7 +2,9 @@
   "extends": "@tsconfig/strictest",
   "compilerOptions": {
     "module": "nodenext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "emitDeclarationOnly": true,
+    "declaration": true
   },
-  "files": ["index.ts", "remarkProseMirror.ts", "proseMirrorRemark.ts"]
+  "include": ["index.ts", "lib/*.ts", "eslint.config.js"]
 }

@@ -20,16 +20,15 @@ import {
   type Node as PmNode,
 } from "prosemirror-model";
 import { trimLines } from "trim-lines";
-import { type Plugin, type Processor } from "unified";
 import { visit } from "unist-util-visit";
 import { zwitch } from "zwitch";
 
 interface State {
-  all: (node: MdastNodes) => Array<PmNode>;
+  all: (node: MdastNodes) => PmNode[];
   definitionById: Map<string, MdastDefinition>;
   footnoteById: Map<string, MdastFootnoteDefinition>;
   footnoteCounts: Map<string, number>;
-  footnoteOrder: Array<string>;
+  footnoteOrder: string[];
   one: (
     node: MdastNodes,
     parent: MdastParent | undefined
@@ -42,9 +41,9 @@ export function createState(
   htmlHandlers: HastHandlers,
   tree: MdastRoot
 ) {
-  const definitionById: Map<string, MdastDefinition> = new Map();
-  const footnoteById: Map<string, MdastFootnoteDefinition> = new Map();
-  const footnoteCounts: Map<string, number> = new Map();
+  const definitionById = new Map<string, MdastDefinition>();
+  const footnoteById = new Map<string, MdastFootnoteDefinition>();
+  const footnoteCounts = new Map<string, number>();
 
   const state: State = {
     all,
@@ -84,8 +83,8 @@ export function createState(
   /**
    * Transform the children of an mdast node into hast nodes.
    */
-  function all(parent: MdastNodes): Array<PmNode> {
-    const values: Array<PmNode> = [];
+  function all(parent: MdastNodes): PmNode[] {
+    const values: PmNode[] = [];
 
     if ("children" in parent) {
       const nodes = parent.children;
@@ -151,18 +150,23 @@ function revert(
   if (subtype === "collapsed") {
     suffix += "[]";
   } else if (subtype === "full") {
+    // We actually want to fall back if node.label is falsy, not just when
+    // it's nullish
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     suffix += "[" + (node.label || node.identifier) + "]";
   }
 
   if (node.type === "imageReference") {
-    return [schema.text("![" + node.alt + suffix)];
+    return [schema.text("![" + (node.alt ?? "") + suffix)];
   }
 
   const contents = state.all(node);
   const head = contents[0];
 
   if (head && head.type === schema.nodes["text"]) {
-    contents[0] = head.copy(Fragment.from(schema.text("[" + head.text)));
+    contents[0] = head.copy(
+      Fragment.from(schema.text("[" + (head.text ?? "")))
+    );
   } else {
     contents.unshift(schema.text("["));
   }
@@ -171,7 +175,7 @@ function revert(
 
   if (tail && tail.type === schema.nodes["text"]) {
     contents[contents.length - 1] = tail.copy(
-      Fragment.from(schema.text(tail.text + suffix))
+      Fragment.from(schema.text((tail.text ?? "") + suffix))
     );
   } else {
     contents.push(schema.text(suffix));
@@ -216,7 +220,7 @@ function ignore() {
  * Fail when a non-node is found in the tree.
  */
 function invalid(node: unknown) {
-  throw new Error("Expected node, not `" + node + "`");
+  throw new Error("Expected node, not `" + JSON.stringify(node) + "`");
 }
 
 export type HastNodeHandler = (
@@ -228,11 +232,14 @@ export type HastNodeHandler = (
 function hastElementHandle(
   handlers: Record<string, HastNodeHandler>,
   node: HastNodes,
-  parent: HastParent | undefined
-): PmNode {
-  return zwitch("tagName", {
+  parent: HastParent | undefined,
+  state: State
+): PmNode | PmNode[] | null {
+  const zwitcher = zwitch("tagName", {
     handlers,
-  })(node, parent);
+  });
+
+  return zwitcher(node, parent, state);
 }
 
 function handle(
@@ -264,12 +271,17 @@ function handle(
         if (body?.type !== "element") return null;
         const hastElement = body.children[0];
         if (hastElement?.type !== "element") return null;
-        const result = hastElementHandle(htmlHandlers, hastElement, undefined);
+        const result = hastElementHandle(
+          htmlHandlers,
+          hastElement,
+          undefined,
+          state
+        );
         if (result) return result;
         if (!node.value) return null;
         return schema.text(node.value);
       },
-      text(node: MdastText, _: MdastParent) {
+      text(node: MdastText) {
         const result = schema.text(
           replaceNewlines(trimLines(String(node.value)))
         );
@@ -281,8 +293,8 @@ function handle(
         parent: MdastParent,
         state: State
       ) {
-        if (handlers["linkReference"])
-          return handlers["linkReference"](node, parent, state);
+        if (handlers.linkReference)
+          return handlers.linkReference(node, parent, state);
 
         const id = String(node.identifier).toUpperCase();
         const definition = state.definitionById.get(id);
@@ -297,7 +309,7 @@ function handle(
             ...node.data,
           },
         };
-        return handlers["link"]?.(linkNode, parent, state);
+        return handlers.link?.(linkNode, parent, state);
       },
     },
   }) as (
@@ -347,36 +359,29 @@ type MdastHandlers = {
   [Type in MdastNodes["type"]]?: MdastNodeHandler<Type>;
 } & Record<string, MdastNodeHandler<string>>;
 
-type HastHandlers = {
-  [Key in HastNodes["type"]]?: HastNodeHandler;
-} & Record<string, HastNodeHandler>;
+type HastHandlers = Partial<Record<HastNodes["type"], HastNodeHandler>> &
+  Record<string, HastNodeHandler>;
 
-export const remarkProseMirror = function (
-  this: Processor<undefined, undefined, undefined, MdastRoot, PmNode>,
-  options: {
-    schema: Schema;
-    handlers: MdastHandlers;
-    htmlHandlers?: HastHandlers;
-  }
-) {
-  this.compiler = function (tree) {
-    const doc = handle(
+export interface Options {
+  schema: Schema;
+  handlers: MdastHandlers;
+  htmlHandlers?: HastHandlers;
+}
+
+export const toProseMirror = function (tree: MdastRoot, options: Options) {
+  const doc = handle(
+    options.schema,
+    options.handlers,
+    options.htmlHandlers ?? {},
+    tree,
+    undefined,
+    createState(
       options.schema,
       options.handlers,
       options.htmlHandlers ?? {},
-      tree,
-      undefined,
-      createState(
-        options.schema,
-        options.handlers,
-        options.htmlHandlers ?? {},
-        tree
-      )
-    ) as PmNode;
-    doc.check();
-    return doc;
-  };
-  // We have to do this ugly cast through unknown here because the
-  // Plugin type just uses `Processor` without any type params, which
-  // makes it incompatible with our more correctly typed Processor<..., MdastRoot, string>
-} as unknown as Plugin<[undefined?], MdastRoot, PmNode>;
+      tree
+    )
+  ) as PmNode;
+  doc.check();
+  return doc;
+};
