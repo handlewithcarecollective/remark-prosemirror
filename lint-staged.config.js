@@ -6,9 +6,9 @@ const config = {
   /** @param {string[]} filenames */
   "*.{ts,js,json,md}": (filenames) => [
     "yarn readme",
-    "git add README.md",
     "eslint --fix " + filenames.join(" "),
     "prettier --write " + filenames.join(" ") + " README.md",
+    "git add README.md",
   ],
   // If typescript files or json files (Typescript statically types .json
   // files, and package.json and tsconfig.json files can change type
