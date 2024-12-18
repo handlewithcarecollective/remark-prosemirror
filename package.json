@@ -4,7 +4,7 @@
   "description": "A remark plugin for converting between markdown and ProseMirror",
   "type": "module",
   "main": "index.js",
-  "repository": "git@github.com:handlewithcarecollective/remark-prosemirror.git",
+  "repository": "https://github.com/handlewithcarecollective/remark-prosemirror.git",
   "author": "Shane Friedman <shane@handlewithcare.dev>",
   "license": "MIT",
   "packageManager": "yarn@4.5.3",
@@ -37,10 +37,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@swc/cli": "^0.5.2",
+    "@swc/core": "^1.10.1",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/hast": "^3.0.4",
-    "@types/mdast": "^4",
-    "@types/unist": "^3.0.3",
     "eslint": "^9.17.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
@@ -63,14 +62,15 @@
     "unified": "^11.0.5"
   },
   "dependencies": {
-    "@swc/cli": "^0.5.2",
-    "@swc/core": "^1.10.1",
-    "devlop": "^1.1.0",
-    "hast-util-from-html": "^2.0.3",
-    "micromark-util-sanitize-uri": "^2.0.1",
-    "trim-lines": "^3.0.1",
+    "@types/hast": "^3.0.0",
+    "@types/mdast": "^4.0.0",
+    "@types/unist": "^3.0.0",
+    "devlop": "^1.0.0",
+    "hast-util-from-html": "^2.0.0",
+    "micromark-util-sanitize-uri": "^2.0.0",
+    "trim-lines": "^3.0.0",
     "unist-util-is": "^6.0.0",
     "unist-util-visit": "^5.0.0",
-    "zwitch": "^2.0.4"
+    "zwitch": "^2.0.0"
   }
 }
