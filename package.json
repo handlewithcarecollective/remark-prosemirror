@@ -19,6 +19,7 @@
     "lib/remark-prosemirror.d.ts"
   ],
   "scripts": {
+    "build": "yarn tsc && yarn swc index.ts lib/*.ts -d .",
     "check:format": "yarn prettier --check .",
     "check:lint": "yarn eslint .",
     "check:types": "yarn tsc --noEmit",
@@ -26,7 +27,9 @@
     "fix:format": "yarn prettier --write .",
     "fix:lint": "yarn eslint --fix .",
     "fix": "yarn fix:lint && yarn fix:format",
-    "build": "yarn tsc && yarn swc index.ts lib/*.ts -d .",
+    "readme:toc": "markdown-toc --maxdepth=3 --append='\n- [API Docs](#api-docs)' --bullets='-' -i readme-stub.md",
+    "readme:api": "typedoc",
+    "readme": "yarn readme:api && yarn readme:toc && cat readme-stub.md > README.md && tail -n +2 gen/README.md >> README.md",
     "test": "yarn tsx --test lib/*.test.ts",
     "postinstall": "husky",
     "prepack": "pinst --disable",
@@ -49,10 +52,12 @@
     "rehype": "^1.0.0",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
+    "remark-toc": "^9.0.0",
     "swc": "^1.0.11",
     "tsx": "^4.19.2",
     "typedoc": "^0.27.5",
     "typedoc-plugin-markdown": "^4.3.2",
+    "typedoc-plugin-remark": "^1.2.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.0",
     "unified": "^11.0.5"
