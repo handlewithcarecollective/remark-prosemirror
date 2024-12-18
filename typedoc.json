@@ -1,0 +1,20 @@
+{
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+  "entryPoints": ["./index.ts"],
+  "plugin": ["typedoc-plugin-markdown"],
+  "readme": "./readme-stub.md",
+  "mergeReadme": true,
+  "gitRevision": "main",
+  "outputFileStrategy": "modules",
+  "out": ".",
+  "cleanOutputDir": false,
+  "hidePageHeader": true,
+  "hideGroupHeadings": true,
+  "formatWithPrettier": true,
+  "parametersFormat": "table",
+  "defaultRemarkPlugins": {
+    "gfm": true,
+    "frontmatter": false,
+    "mdx": false
+  }
+}

@@ -119,13 +119,15 @@ function createState<PmNodes extends string, PmMarks extends string>(
   return state;
 }
 
+export interface Options<PmNodes extends string, PmMarks extends string> {
+  schema: Schema<PmNodes, PmMarks>;
+  nodeHandlers: PmNodeHandlers<PmNodes>;
+  markHandlers: PmMarkHandlers<PmMarks>;
+}
+
 export function fromProseMirror<PmNodes extends string, PmMarks extends string>(
   pmNode: PmNode,
-  options: {
-    schema: Schema<PmNodes, PmMarks>;
-    nodeHandlers: PmNodeHandlers<PmNodes>;
-    markHandlers: PmMarkHandlers<PmMarks>;
-  },
+  options: Options<PmNodes, PmMarks>,
 ): MdastRoot {
   const state = createState(options.nodeHandlers, options.markHandlers);
   return state.one(pmNode) as MdastRoot;

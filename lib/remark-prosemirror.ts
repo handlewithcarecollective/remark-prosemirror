@@ -5,6 +5,8 @@ import { Options, toProseMirror } from "./mdast-util-to-prosemirror.js";
 
 export { toPmNode, toPmMark } from "./mdast-util-to-prosemirror.js";
 
+export type { Options };
+
 export const remarkProseMirror = function (
   this: Processor<undefined, undefined, undefined, MdastRoot, PmNode>,
   options: Options,

@@ -2,7 +2,12 @@ import { it, describe } from "node:test";
 import assert from "node:assert";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
-import { remarkProseMirror, toPmMark, toPmNode } from "./remark-prosemirror.js";
+import {
+  Options,
+  remarkProseMirror,
+  toPmMark,
+  toPmNode,
+} from "./remark-prosemirror.js";
 import { schema } from "prosemirror-test-builder";
 
 await describe("remark-prosemirror", async () => {
@@ -116,6 +121,39 @@ It has two **_paragraphs._**
     );
     assert.ok(
       schema.marks["strong"]?.isInSet(doc.lastChild?.lastChild?.marks ?? []),
+    );
+  });
+
+  await it("should process mark attrs", async () => {
+    const file = await unified()
+      .use(remarkParse)
+      .use(remarkProseMirror, {
+        schema,
+        handlers: {
+          paragraph: toPmNode(schema.nodes["paragraph"]!),
+          link: toPmMark(schema.marks["link"]!, (node) => ({
+            href: node.url,
+            title: node.title,
+          })),
+        },
+      } satisfies Options).process(`
+This is a [document.](https://github.com/handlewithcarecollective/remark-prosemirror)
+
+It has two paragraphs.
+`);
+
+    const doc = file.result;
+
+    assert.equal(doc.childCount, 2);
+    assert.equal(doc.firstChild?.textContent, "This is a document.");
+    assert.equal(doc.lastChild?.textContent, "It has two paragraphs.");
+
+    assert.ok(
+      schema.marks["link"]?.isInSet(doc.firstChild?.lastChild?.marks ?? []),
+    );
+    assert.equal(
+      doc.firstChild?.lastChild?.marks[0]?.attrs["href"],
+      "https://github.com/handlewithcarecollective/remark-prosemirror",
     );
   });
 });

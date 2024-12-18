@@ -17,7 +17,10 @@ import {
 } from "prosemirror-test-builder";
 import { Schema } from "prosemirror-model";
 
-const schema = schemaUntyped as unknown as Schema<"paragraph" | "blockquote">;
+const schema = schemaUntyped as unknown as Schema<
+  "paragraph" | "blockquote",
+  "link" | "em" | "strong"
+>;
 
 await describe("mdast-util-from-prosemirror", async () => {
   await it("should process a doc with paragraphs", () => {
@@ -84,6 +87,43 @@ It has two paragraphs.
     assert.equal(
       result,
       `This is a *document.*
+
+It has two paragraphs.
+`,
+    );
+  });
+
+  await it("should process mark attrs", () => {
+    const mdast = fromProseMirror(
+      doc(
+        p(
+          "This is a ",
+          schema.text("document.", [
+            schema.marks.link.create({
+              href: "https://github.com/handlewithcarecollective/remark-prosemirror",
+            }),
+          ]),
+        ),
+        p("It has two paragraphs."),
+      ),
+      {
+        schema,
+        nodeHandlers: {
+          paragraph: fromPmNode("paragraph"),
+          blockquote: fromPmNode("blockquote"),
+        },
+        markHandlers: {
+          link: fromPmMark("link", (mark) => ({
+            url: mark.attrs["href"] as string,
+          })),
+        },
+      },
+    );
+    const result = unified().use(remarkStringify).stringify(mdast);
+
+    assert.equal(
+      result,
+      `This is a [document.](https://github.com/handlewithcarecollective/remark-prosemirror)
 
 It has two paragraphs.
 `,

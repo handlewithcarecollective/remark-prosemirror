@@ -41,6 +41,7 @@
     "eslint": "^9.17.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
+    "markdown-toc": "^1.2.0",
     "pinst": "^3.0.0",
     "prettier": "^3.4.2",
     "prosemirror-model": "^1.24.1",
@@ -50,6 +51,8 @@
     "remark-stringify": "^11.0.0",
     "swc": "^1.0.11",
     "tsx": "^4.19.2",
+    "typedoc": "^0.27.5",
+    "typedoc-plugin-markdown": "^4.3.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.0",
     "unified": "^11.0.5"

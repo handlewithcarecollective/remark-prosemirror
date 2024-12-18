@@ -357,7 +357,7 @@ export type MdastNodeHandler<Type extends string> = (
 
 type MdastHandlers = {
   [Type in MdastNodes["type"]]?: MdastNodeHandler<Type>;
-} & Record<string, MdastNodeHandler<string>>;
+};
 
 type HastHandlers = Partial<Record<HastNodes["type"], HastNodeHandler>> &
   Record<string, HastNodeHandler>;
