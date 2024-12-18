@@ -8,7 +8,7 @@ export { toPmNode, toPmMark } from "./mdast-util-to-prosemirror.js";
 export type { Options };
 
 export const remarkProseMirror: Plugin<[Options], MdastRoot, PmNode> =
-  function (options: Options) {
+  function (options) {
     this.compiler = function (tree) {
       return toProseMirror(tree as MdastRoot, options);
     };

@@ -3,7 +3,13 @@ const config = {
   // files. lint-staged automatically adds any updated files
   // to git, so it's safe to use `--fix` and `--write` flags,
   // which change source files.
-  "*.{ts,js,json,md}": ["yarn readme", "eslint --fix", "prettier --write"],
+  /** @param {string[]} filenames */
+  "*.{ts,js,json,md}": (filenames) => [
+    "yarn readme",
+    "git add README.md",
+    "eslint --fix " + filenames.join(" "),
+    "prettier --write " + filenames.join(" ") + " README.md",
+  ],
   // If typescript files or json files (Typescript statically types .json
   // files, and package.json and tsconfig.json files can change type
   // correctness) change, we run tsc on the whole project. We use
