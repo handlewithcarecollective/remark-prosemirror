@@ -46,7 +46,7 @@ function createState<PmNodes extends string, PmMarks extends string>(
     if (pmNode.type === schema.topNodeType) {
       const children = state.all(pmNode);
       assert(
-        children.some((child) => is(child, "root")),
+        !children.some((child) => is(child, "root")),
         "Expected non-root nodes",
       );
       return { type: "root", children: children as MdastRootContent[] };

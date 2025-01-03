@@ -1,6 +1,6 @@
 {
   "name": "@handlewithcare/remark-prosemirror",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A remark plugin for converting between markdown and ProseMirror",
   "type": "module",
   "main": "index.js",
@@ -35,7 +35,7 @@
     "readme": "yarn readme:api && yarn readme:toc && cat readme-stub.md > README.md && tail -n +2 gen/README.md >> README.md",
     "test": "yarn tsx --test lib/*.test.ts",
     "postinstall": "husky",
-    "prepack": "pinst --disable",
+    "prepack": "pinst --disable && yarn build",
     "postpack": "pinst --enable"
   },
   "devDependencies": {
