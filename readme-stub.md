@@ -139,5 +139,7 @@ function proseMirrorToMarkdown(doc: Node) {
       })),
     },
   });
+
+  return unified().use(remarkStringify).stringify(mdast);
 }
 ```
