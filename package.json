@@ -1,6 +1,6 @@
 {
   "name": "@handlewithcare/remark-prosemirror",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A remark plugin for converting between markdown and ProseMirror",
   "type": "module",
   "main": "index.js",

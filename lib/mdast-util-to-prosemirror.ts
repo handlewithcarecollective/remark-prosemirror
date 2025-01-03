@@ -260,7 +260,7 @@ function handle(
       footnoteDefinition: ignore,
       root(node: MdastRoot, _: MdastParent | undefined, state: State) {
         const children = state.all(node);
-        const result = schema.topNodeType.createAndFill(null, children);
+        const result = schema.topNodeType.create(null, children);
         return result;
       },
       html(node: MdastHtml) {
