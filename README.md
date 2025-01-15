@@ -81,7 +81,7 @@ async function markdownToProseMirror(markdown: string): Node {
         })),
       },
     } satisfies RemarkProseMirrorOptions)
-    .parse(markdown);
+    .process(markdown);
 
   return doc;
 }
