@@ -10,6 +10,7 @@ be used to convert ProseMirror documents to Markdown, and vice versa!
   - [Parsing a Markdown document as ProseMirror](#parsing-a-markdown-document-as-prosemirror)
   - [Serializing a ProseMirror document to Markdown](#serializing-a-prosemirror-document-to-markdown)
 - [API Docs](#api-docs)
+- [Looking for someone to collaborate with?](#looking-for-someone-to-collaborate-with)
 
 <!-- tocstop -->
 
@@ -406,3 +407,10 @@ function proseMirrorToMarkdown(doc: Node) {
 #### Defined in
 
 [lib/mdast-util-to-prosemirror.ts:324](https://github.com/handlewithcarecollective/remark-prosemirror/blob/main/lib/mdast-util-to-prosemirror.ts#L324)
+
+## Looking for someone to collaborate with?
+
+Reach out to [Handle with Care](https://handlewithcare.dev/#get-in-touch)! We're
+a product development collective with years of experience bringing excellent
+ideas to life. We love Markdown and ProseMirror, and we're always looking for
+new folks to work with!

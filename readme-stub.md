@@ -10,6 +10,7 @@ be used to convert ProseMirror documents to Markdown, and vice versa!
   - [Parsing a Markdown document as ProseMirror](#parsing-a-markdown-document-as-prosemirror)
   - [Serializing a ProseMirror document to Markdown](#serializing-a-prosemirror-document-to-markdown)
 - [API Docs](#api-docs)
+- [Looking for someone to collaborate with?](#looking-for-someone-to-collaborate-with)
 
 <!-- tocstop -->
 
