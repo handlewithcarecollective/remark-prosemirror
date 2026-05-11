@@ -282,10 +282,11 @@ function handle(
         return schema.text(node.value);
       },
       text(node: MdastText) {
-        const result = schema.text(
-          replaceNewlines(trimLines(String(node.value))),
-        );
-        return result;
+        let text = replaceNewlines(trimLines(String(node.value)))
+        if (text.trim() === '') {
+          text = text.replaceAll(' ', '\u00A0')
+        }
+        return schema.text(text)
       },
       ...handlers,
       linkReference(
